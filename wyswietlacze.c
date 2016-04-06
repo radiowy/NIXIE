@@ -1,6 +1,5 @@
 #include "wyswietlacze.h"
 #include "cyfry.h"
-#include "sekunda.h"
 
 #define LED_SEGMENTY	0x500a		//port do ktorego sa podpiete segmenty wyswietlacza
 
