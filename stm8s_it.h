@@ -25,7 +25,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s.h"
-#include "sekunda.h"
 #include "keyb.h"
 #include "wyswietlacze.h"
 #include "cyfry.h"

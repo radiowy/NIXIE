@@ -1,7 +1,16 @@
 #include "wyswietlacze.h"
-#include "cyfry.h"
 
 #define LED_SEGMENTY	0x500a		//port do ktorego sa podpiete segmenty wyswietlacza
+
+//wylacza wszystkie anody lamp
+void all_wysw_off (void)
+	{
+		GPIO_WriteHigh(GPIOC, GPIO_PIN_5); //wy-. wszystkie wywietlacze NIXIE wspolne anody
+		GPIO_WriteHigh(GPIOC, GPIO_PIN_6); //wy-. wszystkie wywietlacze NIXIE wspolne anody
+		GPIO_WriteHigh(GPIOC, GPIO_PIN_7); //wy-. wszystkie wywietlacze NIXIE wspolne anody
+		GPIO_WriteHigh(GPIOD, GPIO_PIN_0); //wy-. wszystkie wywietlacze NIXIE wspolne anody
+	}
+
 
 //tablica zawierajaca cyfry dla LED
 const u16 cyfry[] = { 
