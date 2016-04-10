@@ -1,6 +1,5 @@
 #include "stm8s.h"
 #include "cyfry.h"
-//#include "sekunda.h"
 #include "stm8s_it.h"
 #include "stm8s_gpio.h"
 #include "klawiatura.h"
@@ -84,10 +83,6 @@ void delay(void)
 
 // =======================================================
 
-void set_clk (void)
-	{
-		on_disp = 0;	    //ustawienie trybu wyswietl czas
-	}
 
 // dodawanie wartoœci minut lub godzin w zaleznoœci 
 // od zmiennej on_disp
@@ -113,6 +108,7 @@ void dodawanie ( u16 x)
 			}
 		}
 	}	
+	
 // odejmowanie wartoœci minut lub godzin w zaleznoœci 
 // od zmiennej blinking_digit
 void odejmowanie ( u16 x)	//odejmowanie wartoœci minut lub godzin
@@ -145,15 +141,11 @@ void odejmowanie ( u16 x)	//odejmowanie wartoœci minut lub godzin
 
 int main(void) 	//poczatek main
 {
-	 	// Konfiguracja pracy zegara w module
+	 	// Konfiguracja pracy zegara mikrokontrolera
 		CLK_DeInit();															//Inicjalizacja ustawieñ zegarów
 		CLK_HSECmd(ENABLE);												//Konfiguracja zewnêtrznego rezonatora
 		CLK_SYSCLKConfig(CLK_PRESCALER_HSIDIV1);  //Konfiguracja FCPU dzielona przez 1
-		
-		// obs³uga wyœwietlaczy - kropki
-		GPIO_DeInit(GPIOG);	
-		GPIO_Init(GPIOG, GPIO_PIN_0, GPIO_MODE_OUT_PP_HIGH_FAST);  //w³aczenie kropki
-		
+			
 		// obs³uga LAMP NIXIE - konfiguracja sprzêtowa
 		//katody LAMP NIXIE / kod BCD /	
 		GPIO_DeInit(GPIOC);  	
@@ -187,17 +179,15 @@ int main(void) 	//poczatek main
 		//===============================================================================
 		//wyko¿ystany do generowania sygna³u co 1ms 
 		//CLK_PeripheralClockConfig (CLK_PERIPHERAL_TIMER4 , ENABLE);
-		TIM4_DeInit();
-		/* Time base configuration */ 
+		TIM4_DeInit();															// Reset Tim2
 		TIM4_TimeBaseInit(TIM4_PRESCALER_128, 125); // 128 and 125 == przerwanie 1mS
-		TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);
-		TIM4_Cmd(ENABLE);    												// w³aczenie TIM4 
+		TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);			// W³aczenie przerwania po przepe³nieniu 
+		TIM4_Cmd(ENABLE);    												// Uruchomienie TIM4 
 		
 		//================================================================================
 		
     enableInterrupts();	// w³¹czenie przerwan (no, really).
 		
-		set_clk (); 			//ustawienie statusu wyœwietlacza na 0
 		all_wysw_off ();  //wy³¹czenie wszystkich wyœwietlaczy
 		
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
@@ -250,7 +240,7 @@ int main(void) 	//poczatek main
 				on_disp = 0;
 			break;  
 			
-			case KEY_UP:  // zmiana wartoœci - dodawanie
+			case KEY_UP:  	// zmiana wartoœci - dodawanie
 				if ((program == 1) && (on_disp == 1 || on_disp == 2))
 					dodawanie(on_disp);
 			break;  

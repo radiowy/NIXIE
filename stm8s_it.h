@@ -26,8 +26,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s.h"
 #include "keyb.h"
-#include "wyswietlacze.h"
-#include "cyfry.h"
 //#include "main.c"
 
 //TYLKO DEKLARACJE ZMIENNYCH Z PLIKU main.c !!!
@@ -42,6 +40,7 @@ extern volatile u16 dot;
 extern u16 blink_disp; //do mrugania 
 extern u16 volatile on_disp;
 extern volatile u16 c_wysw;
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/

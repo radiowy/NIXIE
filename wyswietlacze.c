@@ -135,8 +135,6 @@ void kropki (void)
 
 void wysw (void)  //wyswietlanie cyfr 1-4 
 	{
-		//all_wysw_off ();		//wylaczenie wszystkich wyswietaczy
-		
 		switch (on_disp)	//w zaleznisci od stanu zmiennej zniana sposobu wyswietlania
 		{
 			case 3:

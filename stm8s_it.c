@@ -21,10 +21,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s_it.h"
-#include "keyb.h"
-
-
-
 
 /** @addtogroup I2C_EEPROM
   * @{
@@ -36,103 +32,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-//++++++++++++++++ TIM1 i TIM3 TUTAJ OBS£UGA DIODY JASNO-CIEMNO ++++++++++++++++++++++++++++
-
-s16 brightness_direction = +1; // Start by getting brighter.
-
-void TIM1_UPD_OVF_TRG_BRK_IRQHandler(void) {
-    // Get the current brightness.
-    u16 current_brightness = TIM3_GetCapture2();
-    // Check whether we've hit the maximum/minimum brightness yet.
-    if (brightness_direction > 0) {
-        // We're currently getting brighter.
-        if (current_brightness == 1000) {
-            // We're already at the maximum brightness; start getting darker.
-            brightness_direction = -1;
-        }
-    } else {
-        // We're currently getting dimmer.
-        if (current_brightness == 0) {
-            // We're already at the minimum brightness; start getting brighter.
-            brightness_direction = +1;
-        }
-    }
-    // Update the brightness of the LED according to the brightness "direction".
-    TIM3_SetCompare2(current_brightness + brightness_direction);
-    // Clear the interrupt pending bit for TIM1.
-    TIM1_ClearITPendingBit(TIM1_IT_UPDATE);
-}
-
-
-//++++++++++++++++ TIM2 TUTAJ OBS£UGA ZEGARKA ++++++++++++++++++++++++++++
-//tutaj zegarek sobie liczy
-INTERRUPT_HANDLER(TIM2_UPD_OVF_BRK_IRQHandler, 13)  
-{
-  if (akt_s < 0) akt_s = 0;									//zabezpieczenia liczb ujemnych 
-	if (akt_m < 0 | akt_m == 60) akt_m = 0;	  //podczas regulacji 
-	if (akt_g < 0 | akt_g == 60) akt_g = 0;		//w ty³
-			
-	akt_s++;
-	if (akt_s == 60)
-		{
-			akt_s = 0;
-			akt_m++;
-			minuta = akt_m;
-		}
-	if (akt_m == 60)
-		{
-			akt_m = 0;
-			akt_g++;
-			minuta = akt_m;
-			godzina = akt_g;
-		}
-	if (akt_g == 24)
-		{
-			akt_g = 0;
-			godzina = akt_g;
-		}
-	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);		//kasowanie flagi przepe³nienia
-}
-
-//++++++++++++++++ TIM4 co 1 ms ++++++++++++++++++++++++++++
-// do obs³ugi klawiatury i wyœwietlania
-INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
-{
-  c_keyb++;
-	c_dot++;
-	c_wysw++;
-	
-  if (c_keyb == 10)	//sprawdzanie czy jest opoznienie = 10ms
-    {
-			KeybProc();   //wywo³¹nie funkcji obs³ugi klawiatury nie moja biblioteka
-			c_keyb=0;			//skasowanie licznika 
-    }
-	
-	//w³¹czanie-wy³¹czanie kropek sekundnika
-	if (c_dot <= 500)	
-		dot = 1;		//w³¹czenie kropek
-	if (c_dot > 500)
-		dot = 0;		//wy³¹czenie kropek
-	if (c_dot == 1000)
-		c_dot = 0;	
-	
-		
-	if ((on_disp == 1)|| (on_disp == 2) || (on_disp == 4)  )  //sprawdzanie czy blinkac cyframi
-		blink_disp++;
-	
-	if (blink_disp == 300)	
-    {
-			blink_disp = 0;			//nie blinkaæ 
-		}
-			
-	TIM4_ClearITPendingBit(TIM4_IT_UPDATE);  //kasowanie flagi przepe³nienia
-}
-
-
-
-
 /* Public functions ----------------------------------------------------------*/
-
 #ifdef _COSMIC_
 /**
   * @brief  Dummy interrupt routine
@@ -310,11 +210,12 @@ INTERRUPT_HANDLER(SPI_IRQHandler, 10)
   * @param  None
   * @retval None
   */
-/*INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_BRK_IRQHandler, 11)
-{}
+INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_BRK_IRQHandler, 11)
+{
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+}
 
 /**
   * @brief  Timer1 Capture/Compare Interrupt routine.
@@ -358,7 +259,36 @@ INTERRUPT_HANDLER(TIM1_CAP_COM_IRQHandler, 12)
   * @param  None
   * @retval None
   */
- 
+ INTERRUPT_HANDLER(TIM2_UPD_OVF_BRK_IRQHandler, 13)
+{
+  /* In order to detect unexpected events during development,
+     it is recommended to set a breakpoint on the following instruction.
+  */
+	if (akt_s < 0) akt_s = 0;									//zabezpieczenia liczb ujemnych 
+	if (akt_m < 0 | akt_m == 60) akt_m = 0;	  //podczas regulacji 
+	if (akt_g < 0 | akt_g == 60) akt_g = 0;		//w ty3
+			
+	akt_s++;
+	if (akt_s == 60)
+		{
+			akt_s = 0;
+			akt_m++;
+			minuta = akt_m;
+		}
+	if (akt_m == 60)
+		{
+			akt_m = 0;
+			akt_g++;
+			minuta = akt_m;
+			godzina = akt_g;
+		}
+	if (akt_g == 24)
+		{
+			akt_g = 0;
+			godzina = akt_g;
+		}
+	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);		//kasowanie flagi przepe3nienia
+}
 
 /**
   * @brief  Timer2 Capture/Compare Interrupt routine.
@@ -536,12 +466,40 @@ INTERRUPT_HANDLER(TIM6_UPD_OVF_TRG_IRQHandler, 23)
   * @param  None
   * @retval None
   */
- /*INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+ INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
 {
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-//}
+	c_keyb++;
+	c_dot++;
+	c_wysw++;
+	
+  if (c_keyb == 10)	//sprawdzanie czy jest opoznienie = 10ms
+    {
+			KeybProc();   //wywo31nie funkcji obs3ugi klawiatury nie moja biblioteka
+			c_keyb=0;			//skasowanie licznika 
+    }
+	
+	//w31czanie-wy31czanie kropek sekundnika
+	if (c_dot <= 500)	
+		dot = 1;		//w31czenie kropek
+	if (c_dot > 500)
+		dot = 0;		//wy31czenie kropek
+	if (c_dot == 1000)
+		c_dot = 0;	
+	
+		
+	if ((on_disp == 1)|| (on_disp == 2) || (on_disp == 4)  )  //sprawdzanie czy blinkac cyframi
+		blink_disp++;
+	
+	if (blink_disp == 300)	
+    {
+			blink_disp = 0;			//nie blinkaa 
+		}
+			
+	TIM4_ClearITPendingBit(TIM4_IT_UPDATE);  //kasowanie flagi przepe3nienia
+}
 #endif /*STM8S903*/
 
 /**
