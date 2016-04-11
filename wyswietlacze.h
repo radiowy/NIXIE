@@ -23,7 +23,6 @@ extern int volatile minuta;				//wyswietlana minuta
 extern u16 blink_disp;
 extern u16 blinking_digit;	
 extern u16 program ;
-extern u16 dot;
 extern u16 cyfra_wysw;
 extern int volatile	akt_s;							//licznik sekund
 

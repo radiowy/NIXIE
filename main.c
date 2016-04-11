@@ -21,14 +21,8 @@ u16 cyfra_we = 0;
 //obs³ugê klawiatury
 u16 c_keyb; 							
 
-//wykorzystana do przerwania TIM4 aby opozniæ 0 0.5s 
-//mruganie kropek dziesietnych
-int c_dot; 
-
-
-u16 c_wysw;
-
-unsigned int x = 0 ; 		//do klaw
+//wykozystana w bibliotece obs³ugi klawiatury "keyb.c" aby pobrac adres klawiszy
+unsigned int adr_button = 0 ; 		//do klaw
 
 
 //wykorzystana do mrugania wyswietlaczy zmieniana w przerwaniu TIM4 
@@ -39,11 +33,7 @@ u16 blink_disp = 0 ;
 
 // Odpowiada za mozliwoœæ zmiany czasu 
 // 1 - programowanie , 0 - brak programowania
-u16 program = 0;				// 0 nie programujemy czasu, 1 programujemy czas
-
-// Odpowiada za mozliwoœæ wyswietlania lub nie kropek miêdzy  
-// cyframi godzin i minut 1 - kropki w³¹czone , 0 - kropki wy³¹czone
-u16 volatile dot	= 0;						
+u16 program = 0;				// 0 nie programujemy czasu, 1 programujemy czas					
 
 // ---------------   zmienne zegarka
 
@@ -259,5 +249,7 @@ int main(void) 	//poczatek main
 				}
 			break;      
 		}   //koniec switcha
+		
 	}			//koniec petli glownej
+	
 }				//koniec main

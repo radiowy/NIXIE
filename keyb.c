@@ -105,21 +105,21 @@ unsigned int GetKeybSample( void )
 		// zak³adamy, ¿e wciœniêcie klawisza zwiera pin do masy
 		//return (f() | f() | f() | f() );
 		
-	x = 0; 
+	adr_button = 0; 
 			if (GPIO_ReadInputPin(KEY_PORT, KEY0) == RESET) 
-			x = (x+1);
+			adr_button = (adr_button+1);
 						
 			if (GPIO_ReadInputPin(KEY_PORT, KEY1) == RESET) 
-			x = (x+2);
+			adr_button = (adr_button+2);
 			
 			if (GPIO_ReadInputPin(KEY_PORT, KEY2) == RESET) 
-			x = (x+4);
+			adr_button = (adr_button+4);
 			
 			if (GPIO_ReadInputPin(KEY_PORT, KEY3) == RESET) 
-			x = (x+8);
+			adr_button = (adr_button+8);
 							
 			else 
-				return (x);
+				return (adr_button);
 }
 
 

@@ -259,14 +259,19 @@ INTERRUPT_HANDLER(TIM1_CAP_COM_IRQHandler, 12)
   * @param  None
   * @retval None
   */
+ 
+//++++++++++++++++ TIM2 TUTAJ OBS£UGA ZEGARKA ++++++++++++++++++++++++++++
+//tutaj zegarek sobie liczy
+
  INTERRUPT_HANDLER(TIM2_UPD_OVF_BRK_IRQHandler, 13)
 {
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+	
 	if (akt_s < 0) akt_s = 0;									//zabezpieczenia liczb ujemnych 
 	if (akt_m < 0 | akt_m == 60) akt_m = 0;	  //podczas regulacji 
-	if (akt_g < 0 | akt_g == 60) akt_g = 0;		//w ty3
+	if (akt_g < 0 | akt_g == 60) akt_g = 0;		//w ty³
 			
 	akt_s++;
 	if (akt_s == 60)
@@ -466,36 +471,29 @@ INTERRUPT_HANDLER(TIM6_UPD_OVF_TRG_IRQHandler, 23)
   * @param  None
   * @retval None
   */
+ 
+ //+++++++++++++++++++++++++++++++ TIM4 co 1 ms +++++++++++++++++++++++++++++++++++
+ // do obs³ugi klawiatury i wyœwietlania
+ 
  INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
 {
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-	c_keyb++;
-	c_dot++;
-	c_wysw++;
+	c_keyb ++;
 	
   if (c_keyb == 10)	//sprawdzanie czy jest opoznienie = 10ms
     {
-			KeybProc();   //wywo31nie funkcji obs3ugi klawiatury nie moja biblioteka
+			KeybProc();   //wywo³anie funkcji obs³ugi klawiatury nie moja biblioteka
 			c_keyb=0;			//skasowanie licznika 
     }
-	
-	//w31czanie-wy31czanie kropek sekundnika
-	if (c_dot <= 500)	
-		dot = 1;		//w31czenie kropek
-	if (c_dot > 500)
-		dot = 0;		//wy31czenie kropek
-	if (c_dot == 1000)
-		c_dot = 0;	
-	
 		
 	if ((on_disp == 1)|| (on_disp == 2) || (on_disp == 4)  )  //sprawdzanie czy blinkac cyframi
 		blink_disp++;
 	
 	if (blink_disp == 300)	
     {
-			blink_disp = 0;			//nie blinkaa 
+			blink_disp = 0;			//nie blinkaæ
 		}
 			
 	TIM4_ClearITPendingBit(TIM4_IT_UPDATE);  //kasowanie flagi przepe3nienia

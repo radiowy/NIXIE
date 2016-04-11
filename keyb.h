@@ -15,7 +15,7 @@
 #ifndef keyb_h
 #define keyb_h
 
-extern unsigned int x;
+extern unsigned int adr_button;
 
 #define KEY_PORT GPIOB 				//(GPIO_ReadInputData(GPIOB))
 #define KEY0  1  //((GPIO_ReadInputData(GPIOB)) << 1 )

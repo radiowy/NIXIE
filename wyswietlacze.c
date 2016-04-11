@@ -1,6 +1,5 @@
 #include "wyswietlacze.h"
 
-#define LED_SEGMENTY	0x500a		//port do ktorego sa podpiete segmenty wyswietlacza
 
 //wylacza wszystkie anody lamp
 void all_wysw_off (void)
@@ -122,17 +121,6 @@ void jak_wart_cyfry (u16 z)
 	}
 
 
-void kropki (void)
-	{
-		
-			if (dot == 0)
-				GPIO_WriteLow(GPIOG, GPIO_PIN_0);		//wlaczone kropki
-			if (dot == 1)
-				GPIO_WriteHigh(GPIOG, GPIO_PIN_0);  //wy³¹czone kropki
-				
-	}		
-		
-
 void wysw (void)  //wyswietlanie cyfr 1-4 
 	{
 		switch (on_disp)	//w zaleznisci od stanu zmiennej zniana sposobu wyswietlania
@@ -183,9 +171,6 @@ void wysw (void)  //wyswietlanie cyfr 1-4
 					}
 				else
 					GPIO_WriteLow(GPIOC, GPIO_PIN_6);	//NIXIE w³¹czona 2 od lewej
-				
-				if (on_disp == (0))
-					kropki();														//wyswietl kropki
 			break;
 			
 			case 2:			
