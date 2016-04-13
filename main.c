@@ -193,7 +193,15 @@ int main(void) 	//poczatek main
 		switch( GetKeys() )  		//obsluga klawiatury
     {  
 			case KEY_ENTER:
-				if (program == 1)
+				
+				if( KeysTime( ) >= 200 )	//dopiero po trzymaniu 2s klawisza
+						{
+							if (on_disp == 0)		  //wyswietlanie sekund pod warunkiem ze wyswietlany jest czas
+								on_disp = 3;
+							break;
+						}
+						
+				if (program == 1 )
 				{
 					if (on_disp == 4)	//przelacza mruganie na mruganie minut
 						{
@@ -220,12 +228,6 @@ int main(void) 	//poczatek main
 						on_disp = 0;		//wlaczenie trybu wyswietlania czasu 
 						program = 0;		//wylaczenie trybu ustawiania czasu
 						break;
-					}
-				if( KeysTime( ) >= 200 )	//dopiero po trzymaniu 2s klawisza
-					{
-						if (on_disp == 0)		  //wyswietlanie sekund
-							on_disp = 3;
-							break;
 					}
 				on_disp = 0;
 			break;  
